@@ -1,15 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserOrderController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/', function () {
-    return redirect('/login');
-});
+// Route::get('/', function () {
+//    return redirect('/login');
+// });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -28,3 +25,8 @@ Route::middleware(['auth:sanctum', 'role:kasir'])->group(function () {
         return view('kasir.dashboard_kasir');
     })->name('kasir.dashboard');
 });
+
+// User Order (Public Routes)
+Route::get('/', [UserOrderController::class, 'create'])->name('user.order.create');
+Route::post('/', [UserOrderController::class, 'store'])->name('user.order.store');
+Route::get('/confirmation/{id}', [UserOrderController::class, 'confirm'])->name('user.order.confirm');
