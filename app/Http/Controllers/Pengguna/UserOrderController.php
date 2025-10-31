@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pengguna;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use App\Models\Menu;
@@ -15,10 +16,14 @@ class UserOrderController extends Controller
      */
     public function create(Request $request)
     {
+        if (!$request->has('table')) {
+            return redirect('/?table=1');
+        }
+        
         $nomor_meja = $request->query('table', 1);
         $menus = Menu::where('stok', '>', 0)->get();
-
-        return view('user.order', compact('nomor_meja', 'menus'));
+        $menus = Menu::all();
+        return view('user.order', compact('menus', 'nomor_meja'));
     }
 
     /**

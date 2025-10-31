@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+// 🔽 HAPUS 'use Illuminate\Database\Eloquent\Casts\Attribute;' 🔽
+// (JIKA ADA)
 
 class Pesanan extends Model
 {
@@ -13,6 +15,7 @@ class Pesanan extends Model
 
     protected $fillable = [
         'id_pengguna',
+        'customer_name',
         'nomor_meja',
         'tanggal_pesan',
         'total_harga',
@@ -27,7 +30,7 @@ class Pesanan extends Model
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
-    public function detail()
+    public function items()
     {
         return $this->hasMany(DetailPesanan::class, 'id_pesanan');
     }
