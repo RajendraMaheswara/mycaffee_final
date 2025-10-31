@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\Pengguna\UserOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\MenuController;
 
 // Route::get('/', function () {
 //    return redirect('/login');
@@ -30,3 +31,15 @@ Route::middleware(['auth:sanctum', 'role:kasir'])->group(function () {
 Route::get('/', [UserOrderController::class, 'create'])->name('user.order.create');
 Route::post('/', [UserOrderController::class, 'store'])->name('user.order.store');
 Route::get('/confirmation/{id}', [UserOrderController::class, 'confirm'])->name('user.order.confirm');
+
+Route::middleware(['auth:sanctum', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.menu.')
+    ->group(function () {
+        Route::get('/menu', [MenuController::class, 'index'])->name('index');
+        Route::get('/menu/tambah', [MenuController::class, 'create'])->name('create');
+        Route::post('/menu', [MenuController::class, 'store'])->name('store');
+        Route::get('/menu/edit/{id}', [MenuController::class, 'edit'])->name('edit');
+        Route::put('/menu/{id}', [MenuController::class, 'update'])->name('update');
+        Route::delete('/menu/{id}', [MenuController::class, 'destroy'])->name('destroy');
+    });

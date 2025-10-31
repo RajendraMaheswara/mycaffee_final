@@ -3,8 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\PesananController;
-use App\Http\Controllers\DetailPesananController;
+use App\Http\Controllers\Pengguna\PesananController;
+use App\Http\Controllers\Pengguna\DetailPesananController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
