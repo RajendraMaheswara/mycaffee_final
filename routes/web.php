@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\MenuController;
 
 // Route::get('/', function () {
 //    return redirect('/login');
@@ -30,3 +31,13 @@ Route::middleware(['auth:sanctum', 'role:kasir'])->group(function () {
 Route::get('/', [UserOrderController::class, 'create'])->name('user.order.create');
 Route::post('/', [UserOrderController::class, 'store'])->name('user.order.store');
 Route::get('/confirmation/{id}', [UserOrderController::class, 'confirm'])->name('user.order.confirm');
+
+Route::prefix('admin/menu')->name('admin.menu.')->group(function () {
+    Route::get('/', [MenuController::class, 'index'])->name('index');
+    Route::get('/tambah', [MenuController::class, 'create'])->name('create');
+    Route::post('/simpan', [MenuController::class, 'store'])->name('store');
+    Route::get('/edit/{id_menu}', [MenuController::class, 'edit'])->name('edit');
+    Route::post('/update/{id_menu}', [MenuController::class, 'update'])->name('update');
+    Route::get('/hapus/{id_menu}', [MenuController::class, 'destroy'])->name('destroy');
+});
+
