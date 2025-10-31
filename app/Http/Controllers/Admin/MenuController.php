@@ -3,41 +3,41 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Menu;
 
 class MenuController extends Controller
 {
-    // Tampilkan daftar menu
     public function index()
     {
-        $menus = Menu::latest()->get();
-        return view('admin.menu.admin_menu', compact('menus'));
+        $menus = Menu::latest()->paginate(10);
+        return view('admin.admin_menu', compact('menus'));
     }
 
-    // Form tambah menu
     public function create()
     {
-        return view('admin.menu.admin_tambah_menu');
+        return view('admin.admin_tambah_menu');
     }
 
-    // Simpan menu baru
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_menu' => 'required',
-            'deskripsi' => 'nullable',
-            'harga'     => 'required|numeric',
-            'stok'      => 'required|numeric',
-            'kategori'  => 'required|in:kopi,snack,makanan',
-            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        $validator = Validator::make($request->all(), [
+            'gambar'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'nama_menu'  => 'required|string|max:100',
+            'deskripsi'  => 'nullable|string',
+            'harga'      => 'required|numeric|min:0',
+            'stok'       => 'required|integer|min:0',
+            'kategori'   => 'required|in:Snack,Makanan,Kopi',
         ]);
 
-        $gambar = null;
-        if ($request->hasFile('gambar')) {
-            $gambar = $request->file('gambar')->store('menu', 'public');
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('menu', $gambar->hashName());
 
         Menu::create([
             'nama_menu' => $request->nama_menu,
@@ -45,38 +45,40 @@ class MenuController extends Controller
             'harga'     => $request->harga,
             'stok'      => $request->stok,
             'kategori'  => $request->kategori,
-            'gambar'    => $gambar,
+            'gambar'    => $gambar->hashName(),
         ]);
 
-        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil ditambahkan!');
+        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil ditambahkan.');
     }
 
-    // Form edit menu
     public function edit($id)
     {
         $menu = Menu::findOrFail($id);
-        return view('admin.menu.admin_edit_menu', compact('menu'));
+        return view('admin.admin_edit_menu', compact('menu'));
     }
 
-    // Update menu
     public function update(Request $request, $id)
     {
         $menu = Menu::findOrFail($id);
 
-        $request->validate([
-            'nama_menu' => 'required',
-            'deskripsi' => 'nullable',
-            'harga'     => 'required|numeric',
-            'stok'      => 'required|numeric',
-            'kategori'  => 'required|in:kopi,snack,makanan',
-            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        $validator = Validator::make($request->all(), [
+            'gambar'     => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'nama_menu'  => 'required|string|max:100',
+            'deskripsi'  => 'nullable|string',
+            'harga'      => 'required|numeric|min:0',
+            'stok'       => 'required|integer|min:0',
+            'kategori'   => 'required|in:Snack,Makanan,Kopi',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         if ($request->hasFile('gambar')) {
-            if ($menu->gambar) {
-                Storage::disk('public')->delete($menu->gambar);
-            }
-            $menu->gambar = $request->file('gambar')->store('menu', 'public');
+            Storage::delete('menu/' . basename($menu->gambar));
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('menu', $gambar->hashName());
+            $menu->gambar = $gambar->hashName();
         }
 
         $menu->update([
@@ -88,18 +90,15 @@ class MenuController extends Controller
             'gambar'    => $menu->gambar,
         ]);
 
-        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil diperbarui!');
+        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil diperbarui.');
     }
 
-    // Hapus menu
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);
-        if ($menu->gambar) {
-            Storage::disk('public')->delete($menu->gambar);
-        }
+        Storage::delete('menu/' . basename($menu->gambar));
         $menu->delete();
 
-        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil dihapus!');
+        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil dihapus.');
     }
 }
