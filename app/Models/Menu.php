@@ -10,4 +10,18 @@ class Menu extends Model
     use HasFactory;
 
     protected $table = 'menu';
+
+    protected $fillable = [
+        'nama_menu',
+        'deskripsi',
+        'harga',
+        'stok',
+        'kategori',
+        'gambar',
+    ];
+
+    public function detailPesanan()
+    {
+        return $this->hasMany(DetailPesanan::class, 'id_menu');
+    }
 }
