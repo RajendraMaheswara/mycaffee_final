@@ -34,8 +34,4 @@ class Pesanan extends Model
     {
         return $this->hasMany(DetailPesanan::class, 'id_pesanan');
     }
-
-    // 🔽 HAPUS SEMUA FUNGSI "statusPesanan()" DARI SINI 🔽
-
-    // 🔽 HAPUS SEMUA FUNGSI "statusPembayaran()" DARI SINI 🔽
 }

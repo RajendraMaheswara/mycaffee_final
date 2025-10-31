@@ -1,0 +1,72 @@
+/* Order Page Styles */
+.menu-card {
+    @apply border p-3 rounded shadow-sm hover:shadow-md transition-shadow;
+}
+
+.menu-card h3 {
+    @apply font-bold text-gray-800;
+}
+
+.menu-card .description {
+    @apply text-sm text-gray-600;
+}
+
+.menu-card .price {
+    @apply mt-2 text-green-600 font-semibold;
+}
+
+.menu-card .stock {
+    @apply text-gray-600;
+}
+
+.menu-input {
+    @apply border p-1 w-20 rounded;
+}
+
+.btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors;
+}
+
+.btn-success {
+    @apply bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors;
+}
+
+.btn-danger {
+    @apply bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded transition-colors;
+}
+
+.cart-table {
+    @apply w-full mb-4;
+}
+
+.cart-table th {
+    @apply text-left py-2 px-3 bg-gray-100;
+}
+
+.cart-table td {
+    @apply py-2 px-3 border-b;
+}
+
+.cart-table td.text-right {
+    @apply text-right;
+}
+
+.cart-table td.text-center {
+    @apply text-center;
+}
+
+.alert-success {
+    @apply bg-green-100 text-green-800 p-2 mb-4 rounded;
+}
+
+.alert-error {
+    @apply bg-red-100 text-red-800 p-2 mb-4 rounded;
+}
+
+.form-input {
+    @apply border p-2 w-32 rounded;
+}
+
+.form-textarea {
+    @apply border p-2 w-full rounded;
+}

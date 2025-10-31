@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Pengguna\UserOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+// User Order (Public Routes)
+Route::get('/', [UserOrderController::class, 'create'])->name('user.order.create');
+Route::post('/', [UserOrderController::class, 'store'])->name('user.order.store');
+Route::get('/confirmation/{id}', [UserOrderController::class, 'confirm'])->name('user.order.confirm');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -53,3 +60,13 @@ Route::middleware(['auth:sanctum', 'role:kasir'])->group(function () {
         // Kirim ID pesanan ke view
         return view('kasir.tambah_item', ['id_pesanan' => $id]);
     })->name('kasir.pesanan.tambah_item'); // Beri nama agar bisa dipanggil
+});
+
+Route::prefix('admin/menu')->name('admin.menu.')->group(function () {
+    Route::get('/', [MenuController::class, 'index'])->name('index');
+    Route::get('/tambah', [MenuController::class, 'create'])->name('create');
+    Route::post('/simpan', [MenuController::class, 'store'])->name('store');
+    Route::get('/edit/{id_menu}', [MenuController::class, 'edit'])->name('edit');
+    Route::post('/update/{id_menu}', [MenuController::class, 'update'])->name('update');
+    Route::get('/hapus/{id_menu}', [MenuController::class, 'destroy'])->name('destroy');
+});
