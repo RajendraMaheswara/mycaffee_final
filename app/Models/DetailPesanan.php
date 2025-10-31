@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+// ▼▼▼ TAMBAHKAN DUA 'use' INI ▼▼▼
+use App\Models\Pesanan;
+use App\Models\Menu;
 
 class DetailPesanan extends Model
 {
