@@ -5,9 +5,11 @@ use App\Http\Controllers\Pengguna\UserOrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MenuController;
 
-// Route::get('/', function () {
-//    return redirect('/login');
-// });
+
+// User Order (Public Routes)
+Route::get('/', [UserOrderController::class, 'create'])->name('user.order.create');
+Route::post('/', [UserOrderController::class, 'store'])->name('user.order.store');
+Route::get('/confirmation/{id}', [UserOrderController::class, 'confirm'])->name('user.order.confirm');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -27,19 +29,11 @@ Route::middleware(['auth:sanctum', 'role:kasir'])->group(function () {
     })->name('kasir.dashboard');
 });
 
-// User Order (Public Routes)
-Route::get('/', [UserOrderController::class, 'create'])->name('user.order.create');
-Route::post('/', [UserOrderController::class, 'store'])->name('user.order.store');
-Route::get('/confirmation/{id}', [UserOrderController::class, 'confirm'])->name('user.order.confirm');
-
-Route::middleware(['auth:sanctum', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.menu.')
-    ->group(function () {
-        Route::get('/menu', [MenuController::class, 'index'])->name('index');
-        Route::get('/menu/tambah', [MenuController::class, 'create'])->name('create');
-        Route::post('/menu', [MenuController::class, 'store'])->name('store');
-        Route::get('/menu/edit/{id}', [MenuController::class, 'edit'])->name('edit');
-        Route::put('/menu/{id}', [MenuController::class, 'update'])->name('update');
-        Route::delete('/menu/{id}', [MenuController::class, 'destroy'])->name('destroy');
-    });
+Route::prefix('admin/menu')->name('admin.menu.')->group(function () {
+    Route::get('/', [MenuController::class, 'index'])->name('index');
+    Route::get('/tambah', [MenuController::class, 'create'])->name('create');
+    Route::post('/simpan', [MenuController::class, 'store'])->name('store');
+    Route::get('/edit/{id_menu}', [MenuController::class, 'edit'])->name('edit');
+    Route::post('/update/{id_menu}', [MenuController::class, 'update'])->name('update');
+    Route::get('/hapus/{id_menu}', [MenuController::class, 'destroy'])->name('destroy');
+});
