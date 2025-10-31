@@ -14,14 +14,14 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ADMIN
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard_admin', function () {
         return view('admin.dashboard_admin');
     })->name('admin.dashboard');
 });
 
 // KASIR
-Route::middleware(['auth:sanctum', 'role:kasir'])->group(function () {
+Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/kasir/dashboard_kasir', function () {
         return view('kasir.dashboard_kasir');
     })->name('kasir.dashboard');
@@ -41,3 +41,14 @@ Route::prefix('admin/menu')->name('admin.menu.')->group(function () {
     Route::get('/hapus/{id_menu}', [MenuController::class, 'destroy'])->name('destroy');
 });
 
+
+use App\Http\Controllers\Admin\PenggunaController;
+
+Route::prefix('admin/pengguna')->name('admin.pengguna.')->group(function () {
+    Route::get('/', [PenggunaController::class, 'index'])->name('index');
+    Route::get('/tambah', [PenggunaController::class, 'create'])->name('create');
+    Route::post('/simpan', [PenggunaController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [PenggunaController::class, 'edit'])->name('edit');
+    Route::post('/update/{id}', [PenggunaController::class, 'update'])->name('update');
+    Route::get('/hapus/{id}', [PenggunaController::class, 'destroy'])->name('destroy');
+});
